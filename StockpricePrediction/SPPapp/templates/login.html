@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.94)),
+            url("{% static 'images/login.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+
+    <div class="login-wrapper">
+
+        <!-- LEFT INFO SECTION -->
+        <div class="login-info">
+            <span class="tag">Stock Prediction System</span>
+
+            <h1>Welcome Back</h1>
+
+            <p>
+                Login to access stock prediction tools, view historical stock charts,
+                and manage your previous prediction records.
+            </p>
+
+            <div class="info-list">
+                <div>📈 Predict stock closing prices</div>
+                <div>📊 Analyze historical stock trends</div>
+                <div>🧾 View your old predictions</div>
+            </div>
+        </div>
+
+        <!-- LOGIN CARD -->
+        <div class="login-card">
+
+            <h2>Login</h2>
+            <p class="subtitle">Enter your account details to continue.</p>
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label>Username</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    {{ form.password }}
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login to Dashboard
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.login-page {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: white;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 1050px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+    align-items: stretch;
+}
+
+/* LEFT */
+.login-info {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 45px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.tag {
+    display: inline-block;
+    color: #00d4ff;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.35);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.login-info h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.login-info p {
+    color: #cbd5e1;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.info-list {
+    margin-top: 28px;
+}
+
+.info-list div {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    color: #e5e7eb;
+}
+
+/* RIGHT CARD */
+.login-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 45px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+}
+
+.login-card h2 {
+    color: #00d4ff;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #cbd5e1;
+    margin-bottom: 28px;
+}
+
+/* FORM */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    color: #e5e7eb;
+    font-weight: 600;
+    margin-bottom: 7px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.12) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    border-radius: 14px;
+    padding: 13px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #00d4ff !important;
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.18);
+}
+
+.form-group input::placeholder {
+    color: #94a3b8;
+}
+
+/* ERROR */
+.error-box {
+    background: rgba(239,68,68,0.16);
+    border: 1px solid rgba(239,68,68,0.45);
+    color: #fecaca;
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+/* BUTTON */
+.login-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(45deg, #00d4ff, #0072ff);
+    color: white;
+    font-weight: 800;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,212,255,0.35);
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+    .login-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .login-info,
+    .login-card {
+        padding: 28px;
+    }
+
+    .login-info h1 {
+        font-size: 36px;
+    }
+}
+</style>
+
+{% endblock %}

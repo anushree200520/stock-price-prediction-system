@@ -1,0 +1,683 @@
+<!-- SPPapp/templates/home.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.94)),
+            url("{% static 'images/home.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="home-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+
+        <div class="hero-left">
+            <span class="badge-text">AI Powered Stock Forecasting</span>
+
+            <h1>
+                Predict Stock Prices<br>
+                With Machine Learning
+            </h1>
+
+            <p>
+                Analyze historical stock data, compare company performance, 
+                view market trends, and generate smart predictions for major companies.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'history' %}" class="primary-btn">View Market Trends</a>
+                <a href="#companies" class="secondary-btn">Start Prediction</a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="stock-card main-card">
+                <div class="market-header">
+                    <h3>Market Overview</h3>
+                    <span id="marketStatus" class="market-status">Checking...</span>
+                </div>
+
+                <div class="stock-line">
+                    <span>Amazon</span>
+                    <b class="up">+2.34%</b>
+                </div>
+
+                <div class="stock-line">
+                    <span>Apple</span>
+                    <b class="up">+1.88%</b>
+                </div>
+
+                <div class="stock-line">
+                    <span>Google</span>
+                    <b class="down">-0.74%</b>
+                </div>
+
+                <div class="stock-line">
+                    <span>Facebook</span>
+                    <b class="up">+1.21%</b>
+                </div>
+
+                <div class="stock-line">
+                    <span>Microsoft</span>
+                    <b class="up">+3.12%</b>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section">
+
+        <div class="stat-card">
+            <h3>5</h3>
+            <p>Companies Supported</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>ML</h3>
+            <p>Prediction Model</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>CSV</h3>
+            <p>Historical Dataset</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>24/7</h3>
+            <p>Easy Access</p>
+        </div>
+
+    </section>
+
+    <!-- COMPANY PREDICTION SECTION -->
+    <section id="companies" class="company-section">
+
+        <h2>Choose Company for Prediction</h2>
+
+        <p class="section-subtitle">
+            Select a company below and enter stock values to predict the closing price.
+        </p>
+
+        <div class="company-grid">
+
+            <a href="{% url 'predict' 'amazon' %}" class="company-card amazon">
+                <div class="company-top">
+                    <h3>Amazon</h3>
+                    <span class="signal buy">BUY</span>
+                </div>
+                <p>Predict Amazon stock price</p>
+                <div class="mini-bar"><span style="width:78%;"></span></div>
+            </a>
+
+            <a href="{% url 'predict' 'apple' %}" class="company-card apple">
+                <div class="company-top">
+                    <h3>Apple</h3>
+                    <span class="signal hold">HOLD</span>
+                </div>
+                <p>Predict Apple stock price</p>
+                <div class="mini-bar"><span style="width:68%;"></span></div>
+            </a>
+
+            <a href="{% url 'predict' 'facebook' %}" class="company-card facebook">
+                <div class="company-top">
+                    <h3>Facebook</h3>
+                    <span class="signal buy">BUY</span>
+                </div>
+                <p>Predict Facebook stock price</p>
+                <div class="mini-bar"><span style="width:72%;"></span></div>
+            </a>
+
+            <a href="{% url 'predict' 'google' %}" class="company-card google">
+                <div class="company-top">
+                    <h3>Google</h3>
+                    <span class="signal watch">WATCH</span>
+                </div>
+                <p>Predict Google stock price</p>
+                <div class="mini-bar"><span style="width:58%;"></span></div>
+            </a>
+
+            <a href="{% url 'predict' 'microsoft' %}" class="company-card microsoft">
+                <div class="company-top">
+                    <h3>Microsoft</h3>
+                    <span class="signal buy">BUY</span>
+                </div>
+                <p>Predict Microsoft stock price</p>
+                <div class="mini-bar"><span style="width:82%;"></span></div>
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- AI INSIGHTS SECTION -->
+    <section class="ai-section">
+
+        <div class="ai-card">
+            <span class="badge-text">AI Insight</span>
+            <h2>Smart Prediction Workflow</h2>
+
+            <p>
+                The system reads historical stock values, processes important features,
+                applies a trained machine learning model, and displays the predicted closing price.
+            </p>
+
+            <div class="workflow">
+                <div>Dataset</div>
+                <span>→</span>
+                <div>Preprocessing</div>
+                <span>→</span>
+                <div>ML Model</div>
+                <span>→</span>
+                <div>Prediction</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section">
+
+        <h2>Why Choose Our Prediction System?</h2>
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <div class="icon">📈</div>
+                <h4>Accurate Predictions</h4>
+                <p>
+                    Machine learning models analyze stock values and generate predicted prices.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">📊</div>
+                <h4>Historical Analysis</h4>
+                <p>
+                    View company-wise historical prices, volumes, high prices, and low prices.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">⚡</div>
+                <h4>Fast & Simple</h4>
+                <p>
+                    Easy-to-use interface for quick stock prediction and trend checking.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">🧾</div>
+                <h4>Prediction Records</h4>
+                <p>
+                    Save, edit, delete, and review your previous stock prediction results.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">🤖</div>
+                <h4>AI Based Analysis</h4>
+                <p>
+                    Uses trained models to understand patterns from historical stock data.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h4>Company Comparison</h4>
+                <p>
+                    Compare major companies and study their stock trend behavior.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const status = document.getElementById("marketStatus");
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (hour >= 9 && hour <= 16) {
+        status.innerText = "Market Open";
+        status.classList.add("open");
+    } else {
+        status.innerText = "Market Closed";
+        status.classList.add("closed");
+    }
+});
+</script>
+
+<style>
+.home-wrapper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    color: white;
+}
+
+/* HERO */
+.hero-section {
+    min-height: 80vh;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: center;
+    gap: 40px;
+}
+
+.badge-text {
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(0,212,255,0.12);
+    color: #00d4ff;
+    border: 1px solid rgba(0,212,255,0.35);
+    border-radius: 30px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-left h1 {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.hero-left p {
+    font-size: 18px;
+    color: #cbd5e1;
+    max-width: 650px;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 13px 28px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.3s;
+}
+
+.primary-btn {
+    background: linear-gradient(45deg, #00d4ff, #0072ff);
+    color: white;
+}
+
+.secondary-btn {
+    border: 1px solid #00d4ff;
+    color: #00d4ff;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+    transform: translateY(-4px);
+    text-decoration: none;
+    color: white;
+}
+
+/* MARKET CARD */
+.stock-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.market-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.stock-card h3 {
+    color: #00d4ff;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.market-status {
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.market-status.open {
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.45);
+    color: #86efac;
+}
+
+.market-status.closed {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.45);
+    color: #fecaca;
+}
+
+.stock-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: #e5e7eb;
+}
+
+.up {
+    color: #22c55e;
+}
+
+.down {
+    color: #ef4444;
+}
+
+/* STATS */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 60px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    padding: 25px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(0,212,255,0.18);
+}
+
+.stat-card h3 {
+    color: #00d4ff;
+    font-size: 34px;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: #cbd5e1;
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+/* COMPANY */
+.company-section,
+.features-section,
+.ai-section {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.company-section h2,
+.features-section h2,
+.ai-card h2 {
+    color: #00d4ff;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    color: #cbd5e1;
+    margin-bottom: 30px;
+}
+
+.company-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.company-card {
+    padding: 28px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+    min-height: 170px;
+    text-align: left;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.company-card::after {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    right: -40px;
+    bottom: -40px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 50%;
+}
+
+.company-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    text-decoration: none;
+    color: white;
+}
+
+.company-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-card h3 {
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.company-card p {
+    color: rgba(255,255,255,0.88);
+}
+
+.signal {
+    font-size: 11px;
+    font-weight: 900;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.18);
+}
+
+.buy {
+    color: #dcfce7;
+}
+
+.hold {
+    color: #fef9c3;
+}
+
+.watch {
+    color: #e0e7ff;
+}
+
+.mini-bar {
+    width: 100%;
+    height: 7px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.mini-bar span {
+    display: block;
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+}
+
+.amazon {
+    background: linear-gradient(135deg, #ff7a18, #ffb347);
+}
+
+.apple {
+    background: linear-gradient(135deg, #16a34a, #86efac);
+}
+
+.facebook {
+    background: linear-gradient(135deg, #2563eb, #60a5fa);
+}
+
+.google {
+    background: linear-gradient(135deg, #8e44ad, #c084fc);
+}
+
+.microsoft {
+    background: linear-gradient(135deg, #06b6d4, #2563eb);
+}
+
+/* AI SECTION */
+.ai-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 40px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.ai-card p {
+    color: #cbd5e1;
+    max-width: 850px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+.workflow {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.workflow div {
+    padding: 13px 18px;
+    border-radius: 14px;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.28);
+    color: #e5e7eb;
+    font-weight: 800;
+}
+
+.workflow span {
+    color: #00d4ff;
+    font-weight: 900;
+}
+
+/* FEATURES */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 30px;
+}
+
+.feature-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(15px);
+    border-radius: 22px;
+    padding: 30px;
+    text-align: left;
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0,212,255,0.14);
+}
+
+.icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.feature-card h4 {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.feature-card p {
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .hero-left h1 {
+        font-size: 38px;
+    }
+
+    .hero-left p {
+        margin: auto;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .company-card,
+    .feature-card {
+        text-align: center;
+    }
+
+    .company-top {
+        justify-content: center;
+        gap: 10px;
+    }
+}
+</style>
+
+{% endblock %}

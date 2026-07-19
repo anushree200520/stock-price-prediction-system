@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.94)),
+            url("{% static 'images/edit_prediction.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Edit Prediction{% endblock %}
+
+{% block content %}
+
+<div class="edit-dashboard">
+
+    <!-- HERO -->
+    <div class="edit-hero">
+
+        <div class="hero-content">
+
+            <span class="tag">Update Prediction</span>
+
+            <h1>Edit Prediction</h1>
+
+            <p>
+                Modify your previous stock prediction values and update the prediction
+                using the machine learning forecasting system.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN SECTION -->
+    <div class="edit-grid">
+
+        <!-- FORM CARD -->
+        <div class="form-panel">
+
+            <div class="panel-header">
+                <h2>Prediction Details</h2>
+
+                <p>
+                    Update the stock values below and save the prediction.
+                </p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="button-group">
+
+                    <a href="{% url 'old_predictions' %}" class="back-btn">
+                        ⬅ Back
+                    </a>
+
+                    <button type="submit" class="update-btn">
+                        💾 Update Prediction
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- SIDE CARD -->
+        <div class="info-panel">
+
+            <h2>Prediction Insights</h2>
+
+            <p>
+                The system uses machine learning algorithms to analyze stock market
+                values and generate future price predictions based on historical data.
+            </p>
+
+            <div class="info-list">
+
+                <div>
+                    <strong>Model</strong>
+                    <span>Machine Learning</span>
+                </div>
+
+                <div>
+                    <strong>Features</strong>
+                    <span>Open, High, Low, Volume</span>
+                </div>
+
+                <div>
+                    <strong>Action</strong>
+                    <span>Edit Existing Prediction</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.edit-dashboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    color: white;
+}
+
+/* HERO */
+
+.edit-hero {
+    margin-bottom: 30px;
+}
+
+.hero-content {
+
+    background: rgba(255,255,255,0.07);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(18px);
+
+    border-radius: 26px;
+
+    padding: 45px;
+
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.tag {
+
+    display: inline-block;
+
+    color: #f59e0b;
+
+    background: rgba(245,158,11,0.14);
+
+    border: 1px solid rgba(245,158,11,0.35);
+
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.hero-content h1 {
+
+    font-size: 48px;
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+
+    color: #cbd5e1;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+
+    max-width: 850px;
+}
+
+/* GRID */
+
+.edit-grid {
+
+    display: grid;
+
+    grid-template-columns: 1.2fr 0.8fr;
+
+    gap: 25px;
+}
+
+/* PANELS */
+
+.form-panel,
+.info-panel {
+
+    background: rgba(255,255,255,0.07);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(18px);
+
+    border-radius: 26px;
+
+    padding: 32px;
+
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.panel-header {
+    margin-bottom: 20px;
+}
+
+.panel-header h2,
+.info-panel h2 {
+
+    color: #f59e0b;
+
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.panel-header p,
+.info-panel p {
+    color: #cbd5e1;
+}
+
+/* FORM */
+
+.form-panel form p {
+    margin-bottom: 16px;
+}
+
+.form-panel label {
+
+    color: #e5e7eb;
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+
+    display: block;
+}
+
+.form-panel input,
+.form-panel select,
+.form-panel textarea {
+
+    width: 100%;
+
+    background: rgba(255,255,255,0.12) !important;
+
+    color: white !important;
+
+    border: 1px solid rgba(255,255,255,0.18) !important;
+
+    border-radius: 14px;
+
+    padding: 13px;
+
+    outline: none;
+}
+
+.form-panel input:focus,
+.form-panel select:focus,
+.form-panel textarea:focus {
+
+    border-color: #f59e0b !important;
+
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.18);
+}
+
+.form-panel input::placeholder {
+    color: #94a3b8;
+}
+
+/* BUTTONS */
+
+.button-group {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 25px;
+}
+
+.back-btn,
+.update-btn {
+
+    flex: 1;
+
+    text-align: center;
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    font-weight: 800;
+
+    border: none;
+
+    transition: 0.3s;
+
+    text-decoration: none;
+}
+
+.back-btn {
+
+    background: rgba(255,255,255,0.12);
+
+    color: #e5e7eb;
+
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.update-btn {
+
+    background: linear-gradient(45deg, #f59e0b, #fbbf24);
+
+    color: #111827;
+}
+
+.back-btn:hover,
+.update-btn:hover {
+
+    transform: translateY(-4px);
+
+    text-decoration: none;
+}
+
+.update-btn:hover {
+    box-shadow: 0 12px 25px rgba(245,158,11,0.35);
+}
+
+/* INFO */
+
+.info-list {
+    margin-top: 24px;
+}
+
+.info-list div {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.info-list strong {
+    color: #ffffff;
+}
+
+.info-list span {
+    color: #cbd5e1;
+    text-align: right;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content,
+    .form-panel,
+    .info-panel {
+        padding: 24px;
+    }
+
+    .hero-content h1 {
+        font-size: 36px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Stock Prediction{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            {% block background %}
+            background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.94)),
+                        url("{% static 'images/bg.jpg' %}");
+            {% endblock %}
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top left, rgba(0,212,255,0.14), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(108,92,231,0.15), transparent 35%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(5,10,25,0.82) !important;
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            padding: 14px 24px;
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            letter-spacing: 0.4px;
+            color: #ffffff !important;
+        }
+
+        .navbar-brand span {
+            color: #00d4ff !important;
+            font-size: 1.55rem;
+        }
+
+        .nav-link {
+            color: #cbd5e1 !important;
+            font-weight: 600;
+            margin: 0 4px;
+            border-radius: 12px;
+            padding: 8px 13px !important;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(0,212,255,0.12);
+        }
+
+        .nav-item.active .nav-link {
+            color: #00d4ff !important;
+            background: rgba(0,212,255,0.12);
+            border: 1px solid rgba(0,212,255,0.25);
+            font-weight: 800;
+        }
+
+        /* DROPDOWN */
+        .dropdown-menu {
+            background: rgba(15,23,42,0.96) !important;
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            border-radius: 16px;
+            padding: 10px;
+            box-shadow: 0 18px 35px rgba(0,0,0,0.45);
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #e5e7eb !important;
+            font-weight: 600;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(45deg, #00d4ff, #0072ff);
+            color: #ffffff !important;
+        }
+
+        /* AUTH TEXT */
+        .navbar-text {
+            color: #94a3b8 !important;
+        }
+
+        .navbar-text strong {
+            color: #00d4ff;
+        }
+
+        .logout-btn {
+            border: 1px solid rgba(239,68,68,0.55) !important;
+            background: rgba(239,68,68,0.12);
+            color: #fecaca !important;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(45deg, #ef4444, #dc2626) !important;
+            color: white !important;
+        }
+
+        /* DEFAULT CONTENT CONTAINER */
+        .container {
+            margin-top: 20px;
+        }
+
+        /* GLOBAL BUTTON */
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #0072ff);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 25px rgba(0,212,255,0.25);
+        }
+
+        .card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                margin-top: 15px;
+                background: rgba(15,23,42,0.95);
+                border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 18px;
+                padding: 14px;
+            }
+
+            .navbar-text {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .nav-link {
+                margin-bottom: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <span>Stock</span>Prediction
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown {% if request.resolver_match.url_name == 'predict' %}active{% endif %}">
+                        <a class="nav-link dropdown-toggle" href="#" id="predictDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Predict
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="predictDropdown">
+                            <a class="dropdown-item" href="{% url 'predict' 'amazon' %}">Amazon</a>
+                            <a class="dropdown-item" href="{% url 'predict' 'apple' %}">Apple</a>
+                            <a class="dropdown-item" href="{% url 'predict' 'facebook' %}">Facebook</a>
+                            <a class="dropdown-item" href="{% url 'predict' 'google' %}">Google</a>
+                            <a class="dropdown-item" href="{% url 'predict' 'microsoft' %}">Microsoft</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item {% if request.resolver_match.url_name == 'old_predictions' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'old_predictions' %}">History Records</a>
+                    </li>
+
+                    <li class="nav-item {% if request.resolver_match.url_name == 'history' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'history' %}">Market Trends</a>
+                    </li>
+
+                </ul>
+
+                <ul class="navbar-nav">
+
+                    {% if user.is_authenticated %}
+
+                    <li class="nav-item">
+                        <span class="navbar-text mr-3 small">
+                            Logged in as: <strong>{{ user.username }}</strong>
+                        </span>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link logout-btn px-3" href="{% url 'logout' %}">
+                            Logout
+                        </a>
+                    </li>
+
+                    {% else %}
+
+                    <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+
+                    <li class="nav-item {% if request.resolver_match.url_name == 'register' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

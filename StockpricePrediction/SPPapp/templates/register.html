@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.94)),
+            url("{% static 'images/register.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="register-page">
+
+    <div class="register-wrapper">
+
+        <!-- LEFT INFO -->
+        <div class="register-info">
+            <span class="tag">Create Account</span>
+
+            <h1>Join Stock Prediction System</h1>
+
+            <p>
+                Register to start predicting stock prices, view historical trends,
+                and save your prediction records for future reference.
+            </p>
+
+            <div class="info-list">
+                <div>📈 Predict company stock prices</div>
+                <div>📊 Explore stock history charts</div>
+                <div>🧾 Save and manage predictions</div>
+            </div>
+        </div>
+
+        <!-- REGISTER CARD -->
+        <div class="register-card">
+
+            <h2>Register</h2>
+            <p class="subtitle">Create your account to continue.</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="register-btn">
+                    Create Account
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.register-page {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: white;
+}
+
+.register-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+}
+
+/* LEFT */
+.register-info {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 45px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.tag {
+    display: inline-block;
+    color: #c084fc;
+    background: rgba(155,89,182,0.14);
+    border: 1px solid rgba(155,89,182,0.45);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.register-info h1 {
+    font-size: 46px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.register-info p {
+    color: #cbd5e1;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.info-list {
+    margin-top: 28px;
+}
+
+.info-list div {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    color: #e5e7eb;
+}
+
+/* RIGHT CARD */
+.register-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 45px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+}
+
+.register-card h2 {
+    color: #c084fc;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #cbd5e1;
+    margin-bottom: 25px;
+}
+
+/* DJANGO FORM */
+.register-card form p {
+    margin-bottom: 16px;
+}
+
+.register-card label {
+    color: #e5e7eb;
+    font-weight: 600;
+    margin-bottom: 7px;
+    display: block;
+}
+
+.register-card input {
+    width: 100%;
+    background: rgba(255,255,255,0.12) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    border-radius: 14px;
+    padding: 13px;
+    outline: none;
+}
+
+.register-card input:focus {
+    border-color: #c084fc !important;
+    box-shadow: 0 0 0 3px rgba(192,132,252,0.18);
+}
+
+.register-card input::placeholder {
+    color: #94a3b8;
+}
+
+/* HELP TEXT + ERRORS */
+.helptext {
+    display: block;
+    color: #94a3b8;
+    font-size: 13px;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+    color: #fecaca;
+    background: rgba(239,68,68,0.16);
+    border: 1px solid rgba(239,68,68,0.45);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* BUTTON */
+.register-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(45deg, #9b59b6, #6c5ce7);
+    color: white;
+    font-weight: 800;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(155,89,182,0.35);
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+    .register-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .register-info,
+    .register-card {
+        padding: 28px;
+    }
+
+    .register-info h1 {
+        font-size: 34px;
+    }
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.90), rgba(5,10,25,0.94)),
+url("{% static 'images/history.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Stock History{% endblock %}
+
+{% block content %}
+
+<div class="history-dashboard">
+
+    <!-- HERO -->
+    <div class="history-hero">
+        <div>
+            <span class="tag">Stock Market Analytics</span>
+            <h1>Stock History Dashboard</h1>
+            <p>
+                Explore historical stock trends, trading volumes, high prices, and low prices
+                for Amazon, Apple, Facebook, Google, and Microsoft.
+            </p>
+        </div>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="filter-card">
+        <form method="GET" class="filter-form">
+
+            <input 
+                type="number" 
+                name="year" 
+                placeholder="Enter Year"
+                value="{{ request.GET.year }}"
+            >
+
+            <select name="company">
+                <option value="">All Companies</option>
+                <option value="FACEBOOK" {% if request.GET.company == "FACEBOOK" %}selected{% endif %}>Facebook</option>
+                <option value="AMAZON" {% if request.GET.company == "AMAZON" %}selected{% endif %}>Amazon</option>
+                <option value="GOOGLE" {% if request.GET.company == "GOOGLE" %}selected{% endif %}>Google</option>
+                <option value="APPLE" {% if request.GET.company == "APPLE" %}selected{% endif %}>Apple</option>
+                <option value="MICROSOFT" {% if request.GET.company == "MICROSOFT" %}selected{% endif %}>Microsoft</option>
+            </select>
+
+            <button type="submit" class="filter-btn">
+                Apply Filter
+            </button>
+
+            <a href="{% url 'history' %}" class="reset-btn">
+                Reset
+            </a>
+
+        </form>
+    </div>
+
+    {% for company in company_data.companies %}
+
+    <div class="company-panel">
+
+        <div class="company-header">
+            <div>
+                <h2>{{ company.name }} Stock Data</h2>
+                <p>
+                    Available data: {{ company.min_year }} - {{ company.max_year }}
+                </p>
+            </div>
+        </div>
+
+        {% if company.error %}
+            <div class="error-box">
+                ⚠ {{ company.error }}
+            </div>
+
+            <script>
+                alert("{{ company.name }}: {{ company.error }}");
+            </script>
+        {% endif %}
+
+        {% if not company.error %}
+
+        <div class="charts-grid">
+
+            <div class="chart-card">
+                <h4>📈 Stock Prices</h4>
+                <canvas id="chart-{{ company.name }}-prices"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h4>📊 Trading Volumes</h4>
+                <canvas id="chart-{{ company.name }}-volumes"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h4>⬆ High Prices</h4>
+                <canvas id="chart-{{ company.name }}-high"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h4>⬇ Low Prices</h4>
+                <canvas id="chart-{{ company.name }}-low"></canvas>
+            </div>
+
+        </div>
+
+        {% else %}
+            <p class="no-graph">
+                No graph available for selected year.
+            </p>
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty-box">
+        <h3>No data found</h3>
+        <p>Please select another company or year.</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    {% for company in company_data.companies %}
+
+    function createChart(id, type, label, data, color) {
+        var canvas = document.getElementById(id);
+        if (!canvas) return;
+
+        var ctx = canvas.getContext('2d');
+
+        var gradient = ctx.createLinearGradient(0, 0, 0, 350);
+        gradient.addColorStop(0, color.replace('1)', '0.45)'));
+        gradient.addColorStop(1, color.replace('1)', '0)'));
+
+        new Chart(ctx, {
+            type: type,
+            data: {
+                labels: {{ company.dates|safe }},
+                datasets: [{
+                    label: label,
+                    data: data,
+                    backgroundColor: gradient,
+                    borderColor: color,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: type === "line" ? 3 : 0,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#ffffff',
+                    pointHoverBorderColor: color,
+                    pointHoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false
+                },
+
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e5e7eb',
+                            font: { size: 13 }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0,0,0,0.9)',
+                        titleColor: '#00d4ff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#00d4ff',
+                        borderWidth: 1,
+                        padding: 12
+                    }
+                },
+
+                scales: {
+                    x: {
+                        ticks: { color: '#cbd5e1' },
+                        grid: { color: 'rgba(255,255,255,0.06)' }
+                    },
+                    y: {
+                        ticks: { color: '#cbd5e1' },
+                        grid: { color: 'rgba(255,255,255,0.06)' }
+                    }
+                }
+            }
+        });
+    }
+
+    {% if not company.error %}
+
+    createChart("chart-{{ company.name }}-prices", "line", "Prices", {{ company.prices|safe }}, "rgba(255,99,132,1)");
+    createChart("chart-{{ company.name }}-volumes", "bar", "Volumes", {{ company.volumes|safe }}, "rgba(54,162,235,1)");
+    createChart("chart-{{ company.name }}-high", "line", "High", {{ company.high_prices|safe }}, "rgba(75,192,192,1)");
+    createChart("chart-{{ company.name }}-low", "line", "Low", {{ company.low_prices|safe }}, "rgba(255,206,86,1)");
+
+    {% endif %}
+
+    {% endfor %}
+
+});
+</script>
+
+<style>
+.history-dashboard {
+    max-width: 1250px;
+    margin: auto;
+    padding: 40px 20px;
+    color: white;
+}
+
+/* HERO */
+.history-hero {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 45px;
+    margin-bottom: 25px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.tag {
+    display: inline-block;
+    color: #00d4ff;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.35);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.history-hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.history-hero p {
+    color: #cbd5e1;
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 850px;
+}
+
+/* FILTER */
+.filter-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    padding: 22px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    gap: 14px;
+}
+
+.filter-form input,
+.filter-form select {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: white;
+    border-radius: 14px;
+    padding: 13px;
+    outline: none;
+}
+
+.filter-form select option {
+    color: black;
+}
+
+.filter-form input:focus,
+.filter-form select:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.18);
+}
+
+.filter-btn,
+.reset-btn {
+    padding: 13px 22px;
+    border-radius: 14px;
+    border: none;
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.filter-btn {
+    background: linear-gradient(45deg, #00d4ff, #0072ff);
+    color: white;
+}
+
+.reset-btn {
+    background: rgba(255,255,255,0.12);
+    color: #e5e7eb;
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.filter-btn:hover,
+.reset-btn:hover {
+    transform: translateY(-3px);
+    text-decoration: none;
+    color: white;
+}
+
+/* COMPANY PANEL */
+.company-panel {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 28px;
+    margin-bottom: 35px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.company-header {
+    margin-bottom: 24px;
+}
+
+.company-header h2 {
+    color: #00d4ff;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.company-header p {
+    color: #cbd5e1;
+    margin-bottom: 0;
+}
+
+/* CHARTS */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.chart-card {
+    background: rgba(0,0,0,0.58);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 20px;
+    height: 390px;
+    transition: 0.3s;
+}
+
+.chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 28px rgba(0,212,255,0.14);
+}
+
+.chart-card h4 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+canvas {
+    width: 100% !important;
+    height: 310px !important;
+}
+
+/* ERROR */
+.error-box {
+    background: rgba(239,68,68,0.16);
+    border: 1px solid rgba(239,68,68,0.45);
+    color: #fecaca;
+    border-radius: 16px;
+    padding: 15px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.no-graph,
+.empty-box {
+    text-align: center;
+    color: #cbd5e1;
+}
+
+.empty-box {
+    background: rgba(255,255,255,0.07);
+    border-radius: 22px;
+    padding: 35px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .history-hero h1 {
+        font-size: 34px;
+    }
+
+    .history-hero,
+    .company-panel {
+        padding: 24px;
+    }
+}
+</style>
+
+{% endblock %}

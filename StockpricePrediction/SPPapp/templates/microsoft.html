@@ -1,0 +1,548 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block background %}
+background: linear-gradient(rgba(5,10,25,0.88), rgba(5,10,25,0.92)),
+url("{% static 'images/microsoft.jpg' %}");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+{% endblock %}
+
+{% block title %}Microsoft Stock Prediction{% endblock %}
+
+{% block content %}
+
+<div class="microsoft-dashboard">
+
+    <!-- HERO -->
+    <div class="microsoft-hero">
+
+        <div class="hero-content">
+            <span class="tag">Microsoft Forecast Dashboard</span>
+
+            <h1>Microsoft Stock Prediction</h1>
+
+            <p>
+                Enter Microsoft stock values and use the machine learning model to predict
+                the closing price. View historical stock movement using the chart below.
+            </p>
+        </div>
+
+        <div class="hero-stats">
+
+            <div class="stat-card">
+                <span>Company</span>
+                <h3>Microsoft</h3>
+            </div>
+
+            <div class="stat-card">
+                <span>Model</span>
+                <h3>ML Prediction</h3>
+            </div>
+
+            <div class="stat-card">
+                <span>Chart</span>
+                <h3>History</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="prediction-grid">
+
+        <!-- FORM -->
+        <div class="prediction-card">
+
+            <h2>Enter Stock Details</h2>
+
+            <p class="card-subtitle">
+                Fill the values below to generate prediction.
+            </p>
+
+            <form method="POST" action="{% url 'predict' 'microsoft' %}">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="predict-btn">
+                    Predict Microsoft Price
+                </button>
+            </form>
+
+        </div>
+
+        <!-- INSIGHTS -->
+        <div class="insight-card">
+
+            <h2>Microsoft Insights</h2>
+
+            <p>
+                Microsoft is a global leader in software, cloud computing,
+                artificial intelligence, and enterprise technology solutions.
+            </p>
+
+            <div class="insight-list">
+
+                <div>
+                    <strong>Focus</strong>
+                    <span>Cloud & AI Solutions</span>
+                </div>
+
+                <div>
+                    <strong>Input Data</strong>
+                    <span>Open, High, Low, Volume</span>
+                </div>
+
+                <div>
+                    <strong>Output</strong>
+                    <span>Predicted Closing Price</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-panel">
+
+        <div class="chart-header">
+
+            <div>
+                <h2>Microsoft Historical Stock Price</h2>
+
+                <p>
+                    Recent stock price trend used for analysis.
+                </p>
+            </div>
+
+        </div>
+
+        <canvas id="priceChart"></canvas>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    var canvas = document.getElementById('priceChart');
+
+    if (!canvas) return;
+
+    var ctx = canvas.getContext('2d');
+
+    canvas.height = 320;
+
+    var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+    gradient.addColorStop(0, "rgba(32,201,151,0.55)");
+    gradient.addColorStop(1, "rgba(32,201,151,0)");
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: {{ dates|safe }},
+
+            datasets: [{
+
+                label: 'Microsoft Stock Price',
+
+                data: {{ prices|safe }},
+
+                fill: true,
+
+                tension: 0.35,
+
+                backgroundColor: gradient,
+
+                borderColor: '#20c997',
+
+                pointBackgroundColor: '#20c997',
+
+                pointBorderColor: '#ffffff',
+
+                pointRadius: 4,
+
+                pointHoverRadius: 9,
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: '#20c997',
+                pointHoverBorderWidth: 3,
+
+                borderWidth: 3
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            interaction: {
+                mode: 'nearest',
+                intersect: false
+            },
+
+            plugins: {
+
+                legend: {
+
+                    labels: {
+                        color: '#e5e7eb',
+                        font: {
+                            size: 13
+                        }
+                    }
+                },
+
+                tooltip: {
+
+                    enabled: true,
+
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+
+                    titleColor: '#20c997',
+
+                    bodyColor: '#ffffff',
+
+                    borderColor: '#20c997',
+
+                    borderWidth: 1,
+
+                    padding: 12,
+
+                    displayColors: true,
+
+                    callbacks: {
+                        label: function(context) {
+                            return ' Price: $' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+                        color: '#cbd5e1'
+                    },
+
+                    grid: {
+                        color: 'rgba(255,255,255,0.06)'
+                    }
+                },
+
+                y: {
+
+                    ticks: {
+                        color: '#cbd5e1'
+                    },
+
+                    grid: {
+                        color: 'rgba(255,255,255,0.06)'
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+<style>
+
+.microsoft-dashboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    color: white;
+}
+
+/* HERO */
+
+.microsoft-hero {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 25px;
+    align-items: stretch;
+    margin-bottom: 30px;
+}
+
+.hero-content {
+
+    background: rgba(255,255,255,0.07);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(18px);
+
+    border-radius: 24px;
+
+    padding: 40px;
+
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.tag {
+
+    display: inline-block;
+
+    color: #20c997;
+
+    background: rgba(32,201,151,0.16);
+
+    border: 1px solid rgba(32,201,151,0.45);
+
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.hero-content h1 {
+
+    font-size: 48px;
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+
+    color: #cbd5e1;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+}
+
+/* STATS */
+
+.hero-stats {
+    display: grid;
+    gap: 15px;
+}
+
+.stat-card {
+
+    background: rgba(0,0,0,0.55);
+
+    border: 1px solid rgba(32,201,151,0.35);
+
+    border-radius: 20px;
+
+    padding: 22px;
+}
+
+.stat-card span {
+    color: #cbd5e1;
+}
+
+.stat-card h3 {
+
+    color: #20c997;
+
+    font-weight: 800;
+
+    margin-top: 8px;
+}
+
+/* GRID */
+
+.prediction-grid {
+
+    display: grid;
+
+    grid-template-columns: 1.2fr 0.8fr;
+
+    gap: 25px;
+
+    margin-bottom: 30px;
+}
+
+.prediction-card,
+.insight-card,
+.chart-panel {
+
+    background: rgba(255,255,255,0.07);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(18px);
+
+    border-radius: 24px;
+
+    padding: 30px;
+
+    box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+}
+
+.prediction-card h2,
+.insight-card h2,
+.chart-panel h2 {
+
+    color: #20c997;
+
+    font-weight: 800;
+}
+
+.card-subtitle,
+.chart-header p,
+.insight-card p {
+    color: #cbd5e1;
+}
+
+/* FORM */
+
+.prediction-card form p {
+    margin-bottom: 15px;
+}
+
+.prediction-card label {
+
+    color: #e5e7eb;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+.prediction-card input {
+
+    width: 100%;
+
+    background: rgba(255,255,255,0.12) !important;
+
+    color: white !important;
+
+    border: 1px solid rgba(255,255,255,0.18) !important;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    outline: none;
+}
+
+.prediction-card input:focus {
+
+    border-color: #20c997 !important;
+
+    box-shadow: 0 0 0 3px rgba(32,201,151,0.18);
+}
+
+/* BUTTON */
+
+.predict-btn {
+
+    width: 100%;
+
+    margin-top: 10px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: linear-gradient(45deg, #20c997, #14b8a6);
+
+    color: white;
+
+    font-weight: 800;
+
+    transition: 0.3s;
+}
+
+.predict-btn:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 25px rgba(32,201,151,0.35);
+}
+
+/* INSIGHTS */
+
+.insight-list {
+    margin-top: 22px;
+}
+
+.insight-list div {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.insight-list strong {
+    color: #ffffff;
+}
+
+.insight-list span {
+
+    color: #cbd5e1;
+
+    text-align: right;
+}
+
+/* CHART */
+
+.chart-panel {
+    height: 500px;
+}
+
+.chart-header {
+    margin-bottom: 20px;
+}
+
+#priceChart {
+    height: 360px !important;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .microsoft-hero,
+    .prediction-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content h1 {
+        font-size: 34px;
+    }
+
+    .hero-content,
+    .prediction-card,
+    .insight-card,
+    .chart-panel {
+        padding: 22px;
+    }
+}
+
+</style>
+
+{% endblock %}
